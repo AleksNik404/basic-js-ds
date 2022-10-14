@@ -20,9 +20,9 @@ const { NotImplementedError } = require('../extensions/index.js');
 //     this.next = null;
 //   }
 // }
-class ListNode {
-  constructor(x) {
-    this.value = x;
+class Node {
+  constructor(value, next = null) {
+    this.value = value;
     this.next = null;
   }
 }
@@ -38,7 +38,7 @@ class Queue {
   }
 
   enqueue(value) {
-    const newNode = new ListNode(value);
+    const newNode = new Node(value);
 
     // this.length === 0;
     if (!this.first) {
@@ -49,12 +49,13 @@ class Queue {
       this.last = newNode;
     }
 
-    this.length++;
+    // this.length++;
   }
 
   dequeue() {
     let data = this.first.value;
     this.first = this.first.next;
+    // this.length--;
     return data;
   }
 }
