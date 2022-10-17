@@ -75,9 +75,104 @@ class BinarySearchTree {
     return null;
   }
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  // remove(data) {
+  //   if (!this.roott) return false;
+
+  //   let parNode = null;
+  //   let curNode = this.roott;
+
+  //   while (curNode) {
+  //     if (curNode.data > data) {
+  //       parNode = curNode;
+  //       curNode = curNode.left;
+  //     } else if (curNode.data < data) {
+  //       parNode = curNode;
+  //       curNode = curNode.right;
+  //     } else if (curNode.data === data) {
+  //       // 1
+  //       if (curNode.right === null) {
+  //         if (parNode === null) this.roott = curNode.left;
+  //       } else {
+  //         if (curNode.data < parNode.data) parNode.left = curNode.left;
+  //         else if (curNode.data > parNode.data) parNode.right = curNode.right;
+  //       }
+  //     }
+  //     //2
+  //     else if (curNode.right.left === null) {
+  //       if (parNode === null) this.roott = curNode.left;
+  //       else {
+  //         curNode.right.left = curNode.left;
+  //       }
+  //     }
+  //   }
+  // }
+
+  remove(data) {
+    if (!this.roott) return false;
+
+    let curNode = this.roott;
+    let parNode = null;
+
+    while (curNode) {
+      // Поиск нужного узла
+      if (data < curNode.data) {
+        parNode = curNode;
+        curNode = curNode.left;
+      }
+      if (data > curNode.data) {
+        parNode = curNode;
+        curNode = curNode.right;
+      }
+      if (curNode.data === data) {
+        // Если нашли узел с нужными данными
+        // Работаем по правой стороне
+        //
+        // Когда нет правого дочернего нода
+        if (curNode.right === null) {
+          if (parNode === null) this.roott = curNode.left;
+          else {
+            // Если данные меньше чем у родителя, то присоединяем к левой стороне родителя
+            if (curNode.data < parNode.data) parNode.left = curNode.left;
+            // Если данные больше чем у родителя, то присоединяем к правой стороне родителя
+            if (curNode.data > parNode.data) parNode.right = curNode.left;
+          }
+        } // Когда есть правый нод. У которого нет меньшего левого нода.
+        else if (curNode.right.left === null) {
+          curNode.right.left = curNode.left;
+          if (parNode === null) this.roott = curNode.right;
+          else {
+            // Если данные меньше чем у родителя, то присоединяем к левой стороне родителя
+            if (curNode.data < parNode.data) parNode.left = curNode.right;
+            // Если данные больше чем у родителя, то присоединяем к правой стороне родителя
+            if (curNode.data > parNode.data) parNode.right = curNode.right;
+          }
+        }
+        // Когда есть правый нод. У которого также есть левый нод.
+        else {
+          // У правого нода удаляемого элемента, ищем наименьший элемент по левой стороне
+          let leftLessNode = curNode.right.left;
+          let leftLessNodeParent = curNode.right;
+          while (leftLessNode.left !== null) {
+            leftLessNodeParent = leftLessNode;
+            leftLessNode = leftLessNode.left;
+          }
+
+          // Левое поддерево делаем правым поддеревом
+          // Наименьшему левому ноду правой стороны удаляемого элемента, назначаем элементы левой стороны удаляемого элемента.
+          leftLessNodeParent.left = leftLessNode.right;
+          leftLessNode.left = curNode.left;
+          leftLessNode.right = curNode.right;
+
+          if (parNode === null) this.roott = leftLessNode;
+          // Делаем связь от родителя удаляемого элемента, к наименьшему ноду правой стороны, с них сбросился указатель.
+          else {
+            if (curNode.data < parNode.data) parNode.left = leftLessNode;
+            if (curNode.data > parNode.data) parNode.right = leftLessNode;
+          }
+        }
+        return true;
+      }
+    }
   }
 
   min() {
